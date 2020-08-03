@@ -1,0 +1,14 @@
+tpls:
+  - name: tpl1
+    tpls:
+      en: tpl1
+      zh: 模版1
+  # this is a complete example, params, default, comment is optional
+  - name: tp2
+    params:
+      name: string
+    tpls:
+      en: "hello %s"
+      zh: "你好: %s"
+    default: en
+    comment: "这是测试模版"
