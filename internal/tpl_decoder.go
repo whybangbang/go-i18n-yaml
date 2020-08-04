@@ -2,6 +2,7 @@ package internal
 
 import (
 	"errors"
+	"fmt"
 	"github.com/kylelemons/go-gypsy/yaml"
 )
 
@@ -63,10 +64,19 @@ func (t *tplDecoder) Deocde(tplSlice *[]*Tpl) error {
 			return errors.New("tpls is not map")
 		}
 		for k, v := range tpls {
+			text, ok := v.(yaml.Scalar)
+			if !ok {
+				return errors.New(fmt.Sprintf("text is not string %v", v))
+			}
+			textStr := text.String()
+			if textStr[:1] == "\"" && textStr[len(textStr)-1:] == "\""{
+				textStr = textStr[1:len(textStr) -1]
+			}
 			tpl.Tpls = append(tpl.Tpls, &LangTpl{
 				lang: k,
-				text: v.(yaml.Scalar).String(),
+				text: textStr,
 			})
+
 		}
 		*tplSlice = append(*tplSlice, tpl)
 	}

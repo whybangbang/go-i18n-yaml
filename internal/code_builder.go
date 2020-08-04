@@ -111,9 +111,6 @@ func (d *CodeBuilder) appendLangStr(lang *LangTpl, tpl *Tpl) error {
 		d.appendLineTerminator()
 	} else {
 		d.buffer.WriteString("return fmt.Sprintf(\"")
-		if lang.text[:1] == "\"" && lang.text[len(lang.text)-1:] == "\"" {
-			lang.text = lang.text[1:len(lang.text)-1]
-		}
 		d.buffer.WriteString(lang.text)
 		d.buffer.WriteString("\", ")
 		for i, param := range tpl.Params {
