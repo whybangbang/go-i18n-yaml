@@ -140,15 +140,20 @@ func (d *CodeBuilder) appendTab() error {
 	return nil
 }
 
-func (d *CodeBuilder) appendFileTitle() error {
+func (d *CodeBuilder) appendFileTitle(tpls []*Tpl) error {
 	if d.pkgName == "" {
 		return errors.New("pkgName is nil")
 	}
 	d.buffer.WriteString("package ")
 	d.buffer.WriteString(d.pkgName)
 	d.appendLineTerminator()
-	d.buffer.WriteString("import \"fmt\"")
-	d.appendLineTerminator()
+	for _, tpl := range tpls {
+		if len(tpl.Params) > 0 {
+			d.buffer.WriteString("import \"fmt\"")
+			d.appendLineTerminator()
+			break
+		}
+	}
 	return nil
 }
 
@@ -163,7 +168,7 @@ func (d *CodeBuilder) Build(tpls ...*Tpl) ([]byte, error) {
 func (d *CodeBuilder) build(tpls ...*Tpl) error {
 	var err error
 	d.once.Do(func() {
-		err = d.appendFileTitle()
+		err = d.appendFileTitle(tpls)
 		if err != nil {
 			return
 		}
